@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Dashboard</title>
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <script>
+        function redirectToNavigate() {
+            window.location.href = "navigate";
+        }
+
+        // Map logic
+        function initMap() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    var userLocation = {lat: lat, lng: lng};
+
+                    // Define the custom dark map style
+                    var darkMapStyle = [
+                        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+                        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+                        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+                        {
+                            featureType: "administrative.locality",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#d59563" }],
+                        },
+                        {
+                            featureType: "poi",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#d59563" }],
+                        },
+                        {
+                            featureType: "poi.park",
+                            elementType: "geometry",
+                            stylers: [{ color: "#263c3f" }],
+                        },
+                        {
+                            featureType: "poi.park",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#6b9a76" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "geometry",
+                            stylers: [{ color: "#38414e" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "geometry.stroke",
+                            stylers: [{ color: "#212a37" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#9ca5b3" }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "geometry",
+                            stylers: [{ color: "#746855" }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "geometry.stroke",
+                            stylers: [{ color: "#1f2835" }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#f3d19c" }],
+                        },
+                        {
+                            featureType: "transit",
+                            elementType: "geometry",
+                            stylers: [{ color: "#2f3948" }],
+                        },
+                        {
+                            featureType: "transit.station",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#d59563" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "geometry",
+                            stylers: [{ color: "#17263c" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#515c6d" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "labels.text.stroke",
+                            stylers: [{ color: "#17263c" }],
+                        },
+                    ];
+
+                    // Custom marker icon with blue color and glow
+                    // This is a simple SVG data URI. For a more complex glow, you might need a proper SVG file
+                    // or a CSS-based glow on the marker container if possible.
+                    var customMarkerIcon = {
+                        path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z', // Material Design Location On icon
+                        fillColor: '#4285F4', // Blue color for the marker
+                        fillOpacity: 1,
+                        strokeWeight: 0,
+                        scale: 1.5, // Adjust size as needed
+                        anchor: new google.maps.Point(12, 24) // Center the bottom of the icon
+                    };
+
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        center: userLocation,
+                        zoom: 15,
+                        // Disable all UI controls
+                        disableDefaultUI: true,
+                        // Disable all interactions (non-movable)
+                        gestureHandling: 'none',
+                        zoomControl: false,
+                        mapTypeControl: false,
+                        scaleControl: false,
+                        streetViewControl: false,
+                        rotateControl: false,
+                        fullscreenControl: false,
+                        draggable: false, // Ensures map cannot be dragged
+                        // Apply the dark style
+                        styles: darkMapStyle
+                    });
+
+                    new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        title: "You are here",
+                        icon: customMarkerIcon // Apply the custom icon
+                    });
+
+                }, function() {
+                    document.getElementById('map').innerHTML = "Unable to access location. Please enable location services.";
+                    document.getElementById('map').style.display = 'flex';
+                    document.getElementById('map').style.alignItems = 'center';
+                    document.getElementById('map').style.justifyContent = 'center';
+                    document.getElementById('map').style.color = '#777';
+                    document.getElementById('map').style.fontSize = '0.9em';
+                });
+            } else {
+                document.getElementById('map').innerHTML = "Geolocation is not supported by your browser.";
+                document.getElementById('map').style.display = 'flex';
+                document.getElementById('map').style.alignItems = 'center';
+                document.getElementById('map').style.justifyContent = 'center';
+                document.getElementById('map').style.color = '#777';
+                document.getElementById('map').style.fontSize = '0.9em';
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .profile-initials {
+            width: 48px;
+            height: 48px;
+            background: #222;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-right: 10px;
+            user-select: none;
+        }
+        .profile-picture {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #eee;
+        }
+        .user-profile-table {
+            margin: 20px auto 0 auto;
+            width: 95%;
+            max-width: 500px;
+            border-collapse: collapse;
+            font-size: 1em;
+        }
+        .user-profile-table th, .user-profile-table td {
+            text-align: left;
+            padding: 6px 10px;
+        }
+        .user-profile-table th {
+            color: #5A67D8;
+            width: 120px;
+        }
+        .user-profile-table tr:nth-child(even) {
+            background: #f7f7f7;
+        }
+        .banner-section {
+            min-height: 220px;
+            padding: 0;
+            margin-bottom: 20px; /* Added margin for separation */
+        }
+        #map {
+            width: 100%;
+            height: 220px;
+            border-radius: 18px;
+            background: #eaeaea;
+            overflow: hidden; /* Ensure marker glow doesn't overflow if using CSS */
+        }
+        /* Optional: CSS for marker glow effect (more advanced, often requires custom marker elements) */
+        /* You would typically apply this to a custom HTML marker element if you used one.
+           For a simple Google Maps API marker, this is harder to achieve with pure CSS directly on the marker.
+           The SVG path itself can contain filters for glow if you create a more complex SVG.
+        */
+        /*
+        .gm-style .gm-style-iw-d { // This targets info window container, not the marker
+            box-shadow: 0 0 10px 5px rgba(66, 133, 244, 0.7);
+        }
+        */
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="top-section">
+            <h1>Hello, Bhavya!</span></h1>
+            
+        </div>
+
+        <div class="banner-section">
+            <div id="map"></div>
+        </div>
+
+
+        <div class="search-section">
+            <div class="search-bar" onclick="redirectToNavigate()">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Search" readonly>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2>Categories</h2>
+            <div class="categories">
+                <div class="category">
+                    <i class="fas fa-car-side"></i>
+                    <span>Sedan</span>
+                </div>
+                <div class="category">
+                    <i class="fas fa-car"></i>
+                    <span>SUV</span>
+                </div>
+                <div class="category">
+                    <i class="fas fa-shuttle-van"></i>
+                    <span>Minis</span>
+                </div>
+                <div class="category">
+                    <i class="fas fa-bus"></i>
+                    <span>Bus</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="notification-section">
+            <div class="notification">
+                <i class="fas fa-history notification-icon"></i>
+                <span>View Past Trips</span>
+                <i class="fas fa-angle-right"></i>
+            </div>
+            <div class="notification">
+                <i class="fas fa-wallet notification-icon"></i>
+                <span>Manage Your Wallet</span>
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-navbar">
+        <div class="nav-item active">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="nav-item">
+            <a href="navigate/">
+            <i class="fa-solid fa-compass"></i></a>
+        </div>
+        <div class="nav-item">
+            <a href="vendors/req">
+            <i class="fas fa-car"></i></a>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-user"></i>
+        </div>
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE"></script>
+    <script>
+        window.onload = initMap;
+    </script>
+</body>
+</html>
